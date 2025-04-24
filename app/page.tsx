@@ -19,13 +19,13 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card>
+          <Card className="flex flex-col">
             <CardHeader>
               <CardTitle>Object Counting</CardTitle>
               <CardDescription>Automatically count products on shelves</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="h-40 bg-muted rounded-md flex items-center justify-center">
+            <CardContent className="flex-grow">
+              <div className="aspect-video bg-muted rounded-md flex items-center justify-center">
                 <Image
                   src="/placeholder.svg?height=160&width=320"
                   alt="Object counting visualization"
@@ -34,8 +34,11 @@ export default function Home() {
                   className="rounded-md"
                 />
               </div>
+              <p className="mt-4 text-sm text-muted-foreground">
+                Our advanced algorithms can detect and count products on retail shelves with high accuracy.
+              </p>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="mt-auto">
               <Link href="/functions" className="w-full">
                 <Button className="w-full">
                   Try it <ArrowRight className="ml-2 h-4 w-4" />
@@ -44,13 +47,13 @@ export default function Home() {
             </CardFooter>
           </Card>
 
-          <Card>
+          <Card className="flex flex-col">
             <CardHeader>
               <CardTitle>Image Preprocessing</CardTitle>
               <CardDescription>Enhance retail images for better analysis</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="h-40 bg-muted rounded-md flex items-center justify-center">
+            <CardContent className="flex-grow">
+              <div className="aspect-video bg-muted rounded-md flex items-center justify-center">
                 <Image
                   src="/placeholder.svg?height=160&width=320"
                   alt="Image preprocessing visualization"
@@ -59,8 +62,11 @@ export default function Home() {
                   className="rounded-md"
                 />
               </div>
+              <p className="mt-4 text-sm text-muted-foreground">
+                Transform raw images with our preprocessing tools including edge detection and thresholding.
+              </p>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="mt-auto">
               <Link href="/functions" className="w-full">
                 <Button className="w-full">
                   Try it <ArrowRight className="ml-2 h-4 w-4" />
@@ -69,13 +75,13 @@ export default function Home() {
             </CardFooter>
           </Card>
 
-          <Card>
+          <Card className="flex flex-col">
             <CardHeader>
               <CardTitle>Property Detection</CardTitle>
               <CardDescription>Analyze product properties for optimal placement</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="h-40 bg-muted rounded-md flex items-center justify-center">
+            <CardContent className="flex-grow">
+              <div className="aspect-video bg-muted rounded-md flex items-center justify-center">
                 <Image
                   src="/placeholder.svg?height=160&width=320"
                   alt="Property detection visualization"
@@ -84,8 +90,11 @@ export default function Home() {
                   className="rounded-md"
                 />
               </div>
+              <p className="mt-4 text-sm text-muted-foreground">
+                Identify key product properties like roundness, fragility, and sharpness for optimal shelf placement.
+              </p>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="mt-auto">
               <Link href="/functions" className="w-full">
                 <Button className="w-full">
                   Try it <ArrowRight className="ml-2 h-4 w-4" />

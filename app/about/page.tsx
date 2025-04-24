@@ -182,6 +182,95 @@ export default function AboutPage() {
           </TabsContent>
         </Tabs>
 
+        <section className="py-8">
+          <h2 className="text-3xl font-bold mb-8">Our Team</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-32 h-32 rounded-full overflow-hidden mb-4 bg-muted">
+                    <Image
+                      src="/placeholder.svg?height=128&width=128"
+                      alt="Dr. Sarah Chen"
+                      width={128}
+                      height={128}
+                      className="object-cover"
+                    />
+                  </div>
+                  {/* <h3 className="text-xl font-bold">Dr. Sarah Chen</h3>
+                  <p className="text-sm text-primary mb-2">Project Lead</p>
+                  <p className="text-sm text-muted-foreground">
+                    Computer vision expert with 10+ years of experience in retail technology solutions.
+                  </p> */}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-32 h-32 rounded-full overflow-hidden mb-4 bg-muted">
+                    <Image
+                      src="/placeholder.svg?height=128&width=128"
+                      alt="Michael Rodriguez"
+                      width={128}
+                      height={128}
+                      className="object-cover"
+                    />
+                  </div>
+                  {/* <h3 className="text-xl font-bold">Michael Rodriguez</h3>
+                  <p className="text-sm text-primary mb-2">ML Engineer</p>
+                  <p className="text-sm text-muted-foreground">
+                    Specializes in machine learning algorithms for object detection and classification.
+                  </p> */}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-32 h-32 rounded-full overflow-hidden mb-4 bg-muted">
+                    <Image
+                      src="/placeholder.svg?height=128&width=128"
+                      alt="Aisha Patel"
+                      width={128}
+                      height={128}
+                      className="object-cover"
+                    />
+                  </div>
+                  {/* <h3 className="text-xl font-bold">Aisha Patel</h3>
+                  <p className="text-sm text-primary mb-2">UX Researcher</p>
+                  <p className="text-sm text-muted-foreground">
+                    Focuses on user experience and retail environment optimization strategies.
+                  </p> */}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-32 h-32 rounded-full overflow-hidden mb-4 bg-muted">
+                    <Image
+                      src="/placeholder.svg?height=128&width=128"
+                      alt="David Kim"
+                      width={128}
+                      height={128}
+                      className="object-cover"
+                    />
+                  </div>
+                  {/* <h3 className="text-xl font-bold">David Kim</h3>
+                  <p className="text-sm text-primary mb-2">Software Architect</p>
+                  <p className="text-sm text-muted-foreground">
+                    Leads the development of scalable infrastructure and integration with retail systems.
+                  </p> */}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
         <div className="text-center">
           <Link href="/functions">
             <Button size="lg">Try SmartShelf Functions</Button>
