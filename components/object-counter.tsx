@@ -123,7 +123,7 @@ export default function ObjectCounter({ imageUrl }: ObjectCounterProps) {
                   Process Again
                 </>
               ) : (
-                <>Count Objects</>
+                <>Generate</>
               )}
             </Button>
 
