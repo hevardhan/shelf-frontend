@@ -172,20 +172,91 @@ def process_image(image_bytes):
 
 
 @app.post("/count-objects/")
-async def count_objects(request: Request):
+async def detect_empty_space(request: Request):
+    """
+    Endpoint to process an image for empty space detection.
+    Accepts a base64-encoded image and returns a base64-encoded processed image
+    along with the count of detected empty spaces (bounding boxes).
+    """
     data = await request.json()
     base64_image = data.get("image_base64")
 
     try:
-        # Decode Base64 image
-        header, encoded = base64_image.split(",", 1)
-        image_data = base64.b64decode(encoded)
+        # Decode the base64 image
+        image = decode_base64_image(base64_image)
 
-        # Process the image and count objects
-        result = process_image(image_data)
+        # Detect empty spaces and draw bounding boxes
+        processed_image, object_count = detect_empty_spaces(image)
 
-        # Return the result as JSON
-        return JSONResponse(result)
+        # Encode the processed image back to base64
+        processed_image_base64 = encode_image_to_base64(processed_image)
+
+        return JSONResponse(content={
+            "processed_image": processed_image_base64,
+            "object_count": object_count
+        })
 
     except Exception as e:
-        return JSONResponse({"error": str(e)}, status_code=500)
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+
+def decode_base64_image(base64_image: str) -> np.ndarray:
+    """
+    Decodes a base64-encoded image to an OpenCV image format.
+    """
+    header, encoded = base64_image.split(",", 1)
+    image_data = base64.b64decode(encoded)
+    np_image = np.frombuffer(image_data, np.uint8)
+    return cv2.imdecode(np_image, cv2.IMREAD_COLOR)
+
+
+def encode_image_to_base64(image: np.ndarray) -> str:
+    """
+    Encodes an OpenCV image to a base64 string.
+    """
+    _, buffer = cv2.imencode('.png', image)
+    img_str = base64.b64encode(buffer).decode('utf-8')
+    return f"data:image/png;base64,{img_str}"
+
+
+def detect_empty_spaces(image: np.ndarray) -> tuple:
+    """
+    Detects empty spaces in the given image.
+    Returns the processed image with bounding boxes and the count of empty spaces.
+    """
+    # Convert to grayscale
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # Step 1: Adaptive Thresholding to segment objects
+    thresh = cv2.adaptiveThreshold(
+        gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 25, 15
+    )
+
+    # Step 2: Find contours of objects
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    # Step 3: Create mask and fill contours to mark detected objects
+    object_mask = np.zeros_like(gray)
+    cv2.drawContours(object_mask, contours, -1, (255), thickness=cv2.FILLED)
+
+    # Step 4: Expand object regions (Morphological Closing)
+    kernel = np.ones((15, 15), np.uint8)
+    expanded_objects = cv2.morphologyEx(object_mask, cv2.MORPH_CLOSE, kernel)
+
+    # Step 5: Invert mask to detect empty spaces
+    empty_spaces = cv2.bitwise_not(expanded_objects)
+
+    # Step 6: Find contours of empty spaces and draw bounding boxes
+    empty_space_contours, _ = cv2.findContours(
+        empty_spaces, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+    )
+
+    result_image = image.copy()
+    object_count = 0
+
+    for cnt in empty_space_contours:
+        x, y, w, h = cv2.boundingRect(cnt)
+        cv2.rectangle(result_image, (x, y), (x + w, y + h), (0, 255, 0), 2)  # Green boxes
+        object_count += 1
+
+    return result_image, object_count

@@ -190,6 +190,26 @@ export default function AboutPage() {
                 <div className="flex flex-col items-center text-center">
                   <div className="w-32 h-32 rounded-full overflow-hidden mb-4 bg-muted">
                     <Image
+                      src="/team/riya.jpg?height=128&width=128"
+                      alt="Riya Shukla"
+                      width={128}
+                      height={128}
+                      className="object-cover"
+                    />
+                  </div>
+                  <h3 className="text-xl font-bold">Riya Shukla</h3>
+                  {/* <p className="text-sm text-primary mb-2">UX Researcher</p>
+                  <p className="text-sm text-muted-foreground">
+                    Focuses on user experience and retail environment optimization strategies.
+                  </p> */}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-32 h-32 rounded-full overflow-hidden mb-4 bg-muted">
+                    <Image
                       src="/team/ananya.png?height=128&width=128"
                       alt="Ananya Sachan"
                       width={128}
@@ -227,41 +247,21 @@ export default function AboutPage() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex flex-col items-center text-center">
-                  <div className="w-32 h-32 rounded-full overflow-hidden mb-4 bg-muted">
-                    <Image
-                      src="/placeholder.svg?height=128&width=128"
-                      alt="Aisha Patel"
-                      width={128}
-                      height={128}
-                      className="object-cover"
-                    />
-                  </div>
-                  {/* <h3 className="text-xl font-bold">Aisha Patel</h3>
-                  <p className="text-sm text-primary mb-2">UX Researcher</p>
-                  <p className="text-sm text-muted-foreground">
-                    Focuses on user experience and retail environment optimization strategies.
-                  </p> */}
-                </div>
-              </CardContent>
-            </Card>
 
             <Card>
               <CardContent className="pt-6">
                 <div className="flex flex-col items-center text-center">
                   <div className="w-32 h-32 rounded-full overflow-hidden mb-4 bg-muted">
                     <Image
-                      src="/placeholder.svg?height=128&width=128"
-                      alt="David Kim"
+                      src="/team/aparna.png?height=128&width=128"
+                      alt="Aparna Iyer"
                       width={128}
                       height={128}
                       className="object-cover"
                     />
                   </div>
-                  {/* <h3 className="text-xl font-bold">David Kim</h3>
-                  <p className="text-sm text-primary mb-2">Software Architect</p>
+                  <h3 className="text-xl font-bold">Aparna Iyer</h3>
+                  {/* <p className="text-sm text-primary mb-2">Software Architect</p>
                   <p className="text-sm text-muted-foreground">
                     Leads the development of scalable infrastructure and integration with retail systems.
                   </p> */}

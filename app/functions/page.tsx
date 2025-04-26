@@ -57,7 +57,7 @@ export default function FunctionsPage() {
         {isMounted && selectedImage && (
           <Tabs defaultValue="object-counting" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="object-counting">Object Patching</TabsTrigger>
+              <TabsTrigger value="object-counting">Empty Object Counting</TabsTrigger>
               <TabsTrigger value="preprocessing">Image Preprocessing</TabsTrigger>
               <TabsTrigger value="property-detection">Property Detection</TabsTrigger>
             </TabsList>
