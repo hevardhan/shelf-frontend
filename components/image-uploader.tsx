@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import Image from "next/image"
 
 import { useState, useRef } from "react"
 import { Upload, X } from "lucide-react"

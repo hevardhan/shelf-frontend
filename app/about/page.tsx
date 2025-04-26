@@ -31,7 +31,7 @@ export default function AboutPage() {
           </div>
           <div className="rounded-lg overflow-hidden">
             <Image
-              src="/placeholder.svg?height=300&width=500"
+              src="/shelf.png?height=300&width=500"
               alt="SmartShelf concept"
               width={500}
               height={300}
@@ -190,15 +190,15 @@ export default function AboutPage() {
                 <div className="flex flex-col items-center text-center">
                   <div className="w-32 h-32 rounded-full overflow-hidden mb-4 bg-muted">
                     <Image
-                      src="/placeholder.svg?height=128&width=128"
-                      alt="Dr. Sarah Chen"
+                      src="/team/ananya.png?height=128&width=128"
+                      alt="Ananya Sachan"
                       width={128}
                       height={128}
                       className="object-cover"
                     />
                   </div>
-                  {/* <h3 className="text-xl font-bold">Dr. Sarah Chen</h3>
-                  <p className="text-sm text-primary mb-2">Project Lead</p>
+                  <h3 className="text-xl font-bold">Ananya Sachan</h3>
+                  {/* <p className="text-sm text-primary mb-2">Project Lead</p>
                   <p className="text-sm text-muted-foreground">
                     Computer vision expert with 10+ years of experience in retail technology solutions.
                   </p> */}
@@ -211,15 +211,15 @@ export default function AboutPage() {
                 <div className="flex flex-col items-center text-center">
                   <div className="w-32 h-32 rounded-full overflow-hidden mb-4 bg-muted">
                     <Image
-                      src="/placeholder.svg?height=128&width=128"
-                      alt="Michael Rodriguez"
+                      src="/team/hevardhan.jpg?height=128&width=128"
+                      alt="Hevardhan S"
                       width={128}
                       height={128}
                       className="object-cover"
                     />
                   </div>
-                  {/* <h3 className="text-xl font-bold">Michael Rodriguez</h3>
-                  <p className="text-sm text-primary mb-2">ML Engineer</p>
+                  <h3 className="text-xl font-bold">Hevardhan S</h3>
+                  {/* <p className="text-sm text-primary mb-2">ML Engineer</p>
                   <p className="text-sm text-muted-foreground">
                     Specializes in machine learning algorithms for object detection and classification.
                   </p> */}

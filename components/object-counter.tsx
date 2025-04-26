@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useRef } from "react"
-import Image from "next/image"
+import { useState, useRef, useEffect } from "react"
+import NextImage from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { RotateCw, Check, Package } from "lucide-react"
@@ -15,63 +15,58 @@ export default function ObjectCounter({ imageUrl }: ObjectCounterProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [processedImageUrl, setProcessedImageUrl] = useState<string | null>(null)
   const [objectCount, setObjectCount] = useState<number | null>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isClient, setIsClient] = useState(false) // State to check if it's client-side rendering
 
-  const processImage = () => {
+  // This hook runs only on the client side
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  const processImage = async () => {
+    if (!imageUrl) return
+
     setIsProcessing(true)
 
-    // Simulate processing delay
-    setTimeout(() => {
-      countObjects()
-      setIsProcessing(false)
-    }, 1500)
-  }
+    try {
+      // Convert the image URL to base64 before sending it
+      const imageResponse = await fetch(imageUrl)
+      const imageBlob = await imageResponse.blob()
+      const reader = new FileReader()
+      
+      reader.onloadend = async () => {
+        const base64Image = reader.result as string
+        
+        // Send the base64 string to the backend for processing
+        const res = await fetch("http://localhost:8000/count-objects/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            image_base64: base64Image,
+          }),
+        })
 
-  const countObjects = () => {
-    if (!canvasRef.current) return
+        if (!res.ok) throw new Error("Image processing failed")
 
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
-
-    const img = new Image()
-    img.crossOrigin = "anonymous"
-    img.onload = () => {
-      // Set canvas dimensions to match image
-      canvas.width = img.width
-      canvas.height = img.height
-
-      // Draw original image
-      ctx.drawImage(img, 0, 0, img.width, img.height)
-
-      // Simulate object detection by drawing rectangles
-      // In a real application, this would use actual computer vision algorithms
-      const numObjects = Math.floor(Math.random() * 10) + 5 // Random number between 5-15
-      setObjectCount(numObjects)
-
-      // Draw bounding boxes around "detected" objects
-      ctx.strokeStyle = "rgba(0, 255, 0, 0.8)"
-      ctx.lineWidth = 3
-
-      for (let i = 0; i < numObjects; i++) {
-        const x = Math.random() * (img.width - 100)
-        const y = Math.random() * (img.height - 100)
-        const width = Math.random() * 100 + 50
-        const height = Math.random() * 100 + 50
-
-        ctx.strokeRect(x, y, width, height)
-
-        // Add object number
-        ctx.fillStyle = "rgba(0, 255, 0, 0.8)"
-        ctx.font = "16px Arial"
-        ctx.fillText(`#${i + 1}`, x + 5, y + 20)
+        const data = await res.json()
+        setProcessedImageUrl(data.processed_image)
+        console.log(data.processed_image)
+        setObjectCount(data.object_count) // Assuming the backend returns object count
       }
 
-      setProcessedImageUrl(canvas.toDataURL("image/png"))
+      reader.readAsDataURL(imageBlob)
+    } catch (error) {
+      console.error(error)
+      alert("Image processing failed. Check the console for details.")
+    } finally {
+      setIsProcessing(false)
     }
-
-    img.src = imageUrl
   }
+
+  // Only render the UI elements that depend on window or client-side logic after the client has loaded
+  if (!isClient) return null
 
   return (
     <div className="space-y-6">
@@ -83,7 +78,12 @@ export default function ObjectCounter({ imageUrl }: ObjectCounterProps) {
           </CardHeader>
           <CardContent>
             <div className="aspect-video relative rounded-md overflow-hidden border">
-              <Image src={imageUrl || "/placeholder.svg"} alt="Original image" fill className="object-contain" />
+              <NextImage
+                src={imageUrl || "/placeholder.svg"}
+                alt="Original image"
+                fill
+                className="object-contain"
+              />
             </div>
           </CardContent>
         </Card>
@@ -96,7 +96,7 @@ export default function ObjectCounter({ imageUrl }: ObjectCounterProps) {
           <CardContent>
             <div className="aspect-video relative rounded-md overflow-hidden border bg-muted/50 flex items-center justify-center">
               {processedImageUrl ? (
-                <Image
+                <NextImage
                   src={processedImageUrl || "/placeholder.svg"}
                   alt="Processed image"
                   fill
@@ -109,7 +109,6 @@ export default function ObjectCounter({ imageUrl }: ObjectCounterProps) {
                 </div>
               )}
             </div>
-            <canvas ref={canvasRef} className="hidden" />
           </CardContent>
           <CardFooter className="flex justify-between">
             <Button onClick={processImage} disabled={isProcessing}>

@@ -27,7 +27,7 @@ export default function Home() {
             <CardContent className="flex-grow">
               <div className="aspect-video bg-muted rounded-md flex items-center justify-center">
                 <Image
-                  src="/placeholder.svg?height=160&width=320"
+                  src="/obj.png?height=160&width=320"
                   alt="Object counting visualization"
                   width={320}
                   height={160}
@@ -55,7 +55,7 @@ export default function Home() {
             <CardContent className="flex-grow">
               <div className="aspect-video bg-muted rounded-md flex items-center justify-center">
                 <Image
-                  src="/placeholder.svg?height=160&width=320"
+                  src="/img.png?height=160&width=320"
                   alt="Image preprocessing visualization"
                   width={320}
                   height={160}
@@ -78,12 +78,12 @@ export default function Home() {
           <Card className="flex flex-col">
             <CardHeader>
               <CardTitle>Property Detection</CardTitle>
-              <CardDescription>Analyze product properties for optimal placement</CardDescription>
+              <CardDescription>Analyze product properties</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
               <div className="aspect-video bg-muted rounded-md flex items-center justify-center">
                 <Image
-                  src="/placeholder.svg?height=160&width=320"
+                  src="/prop.png"
                   alt="Property detection visualization"
                   width={320}
                   height={160}

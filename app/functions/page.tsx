@@ -1,8 +1,19 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useState, useEffect } from "react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
 import ImageUploader from "@/components/image-uploader"
 import ObjectCounter from "@/components/object-counter"
 import ImagePreprocessor from "@/components/image-preprocessor"
@@ -11,6 +22,11 @@ import PropertyDetector from "@/components/property-detector"
 export default function FunctionsPage() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const handleImageUpload = (imageDataUrl: string) => {
     setSelectedImage(imageDataUrl)
@@ -29,14 +45,16 @@ export default function FunctionsPage() {
         <Card>
           <CardHeader>
             <CardTitle>Upload an Image</CardTitle>
-            <CardDescription>Select or drag and drop a retail shelf image to analyze</CardDescription>
+            <CardDescription>
+              Select or drag and drop a retail shelf image to analyze
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <ImageUploader onImageUpload={handleImageUpload} />
           </CardContent>
         </Card>
 
-        {selectedImage && (
+        {isMounted && selectedImage && (
           <Tabs defaultValue="object-counting" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="object-counting">Object Counting</TabsTrigger>

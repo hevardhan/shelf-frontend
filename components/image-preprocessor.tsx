@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useRef } from "react"
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { RotateCw, ImageIcon, Check } from "lucide-react"
@@ -18,108 +17,41 @@ export default function ImagePreprocessor({ imageUrl }: ImagePreprocessorProps) 
   const [preprocessingType, setPreprocessingType] = useState<string>("grayscale")
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  const processImage = () => {
-    setIsProcessing(true)
-
-    // Simulate processing delay
-    setTimeout(() => {
-      applyPreprocessing()
-      setIsProcessing(false)
-    }, 1000)
-  }
-
-  const applyPreprocessing = () => {
-    if (!canvasRef.current) return
-
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
-
-    const img = new Image()
-    img.crossOrigin = "anonymous"
-    img.onload = () => {
-      // Set canvas dimensions to match image
-      canvas.width = img.width
-      canvas.height = img.height
-
-      // Draw original image
-      ctx.drawImage(img, 0, 0, img.width, img.height)
-
-      // Apply selected preprocessing
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-      const data = imageData.data
-
-      switch (preprocessingType) {
-        case "grayscale":
-          // Convert to grayscale
-          for (let i = 0; i < data.length; i += 4) {
-            const avg = (data[i] + data[i + 1] + data[i + 2]) / 3
-            data[i] = avg // red
-            data[i + 1] = avg // green
-            data[i + 2] = avg // blue
-          }
-          break
-
-        case "edges":
-          // Simple edge detection (this is a simplified version)
-          // First convert to grayscale
-          const grayscale = new Uint8ClampedArray(data.length)
-          for (let i = 0; i < data.length; i += 4) {
-            const avg = (data[i] + data[i + 1] + data[i + 2]) / 3
-            grayscale[i] = grayscale[i + 1] = grayscale[i + 2] = avg
-            grayscale[i + 3] = data[i + 3]
-          }
-
-          // Apply a simple edge detection filter
-          for (let y = 1; y < canvas.height - 1; y++) {
-            for (let x = 1; x < canvas.width - 1; x++) {
-              const idx = (y * canvas.width + x) * 4
-
-              // Simple Sobel-like operation
-              const gx =
-                -1 * grayscale[((y - 1) * canvas.width + (x - 1)) * 4] +
-                -2 * grayscale[(y * canvas.width + (x - 1)) * 4] +
-                -1 * grayscale[((y + 1) * canvas.width + (x - 1)) * 4] +
-                1 * grayscale[((y - 1) * canvas.width + (x + 1)) * 4] +
-                2 * grayscale[(y * canvas.width + (x + 1)) * 4] +
-                1 * grayscale[((y + 1) * canvas.width + (x + 1)) * 4]
-
-              const gy =
-                -1 * grayscale[((y - 1) * canvas.width + (x - 1)) * 4] +
-                -2 * grayscale[((y - 1) * canvas.width + x) * 4] +
-                -1 * grayscale[((y - 1) * canvas.width + (x + 1)) * 4] +
-                1 * grayscale[((y + 1) * canvas.width + (x - 1)) * 4] +
-                2 * grayscale[((y + 1) * canvas.width + x) * 4] +
-                1 * grayscale[((y + 1) * canvas.width + (x + 1)) * 4]
-
-              // Magnitude
-              const mag = Math.sqrt(gx * gx + gy * gy)
-
-              // Threshold
-              const threshold = 50
-              const value = mag > threshold ? 255 : 0
-
-              data[idx] = data[idx + 1] = data[idx + 2] = value
-            }
-          }
-          break
-
-        case "threshold":
-          // Apply thresholding
-          const threshold = 128
-          for (let i = 0; i < data.length; i += 4) {
-            const avg = (data[i] + data[i + 1] + data[i + 2]) / 3
-            const value = avg > threshold ? 255 : 0
-            data[i] = data[i + 1] = data[i + 2] = value
-          }
-          break
-      }
-
-      ctx.putImageData(imageData, 0, 0)
-      setProcessedImageUrl(canvas.toDataURL("image/png"))
+  const processImage = async () => {
+    if (!imageUrl) return;
+  
+    setIsProcessing(true);
+  
+    try {
+      const res = await fetch("http://localhost:8000/process-image/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          image_base64: imageUrl,
+          type: preprocessingType,
+          
+        }),
+        
+      });
+      if (!res.ok) throw new Error("Image processing failed");
+      
+      const data = await res.json();
+      setProcessedImageUrl(data.processed_image);
+      console.log(data.processed_image);
+    } catch (error) {
+      console.error(error);
+      alert("Image processing failed. Check the console for details.");
+    } finally {
+      setIsProcessing(false);
     }
+  };
+  
 
-    img.src = imageUrl
+  const resetImage = () => {
+    setProcessedImageUrl(null)
+    setPreprocessingType("grayscale")
   }
 
   return (
@@ -132,7 +64,7 @@ export default function ImagePreprocessor({ imageUrl }: ImagePreprocessorProps) 
           </CardHeader>
           <CardContent>
             <div className="aspect-video relative rounded-md overflow-hidden border">
-              <Image src={imageUrl || "/placeholder.svg"} alt="Original image" fill className="object-contain" />
+              <img src={imageUrl || "/placeholder.svg"} alt="Original image" className="object-contain w-full h-full" />
             </div>
           </CardContent>
         </Card>
@@ -145,11 +77,10 @@ export default function ImagePreprocessor({ imageUrl }: ImagePreprocessorProps) 
           <CardContent>
             <div className="aspect-video relative rounded-md overflow-hidden border bg-muted/50 flex items-center justify-center">
               {processedImageUrl ? (
-                <Image
+                <img
                   src={processedImageUrl || "/placeholder.svg"}
                   alt="Processed image"
-                  fill
-                  className="object-contain"
+                  className="object-contain w-full h-full"
                 />
               ) : (
                 <div className="text-center text-muted-foreground">
@@ -187,6 +118,14 @@ export default function ImagePreprocessor({ imageUrl }: ImagePreprocessorProps) 
                   </>
                 )}
               </Button>
+
+              {processedImageUrl && (
+                <a href={processedImageUrl} download="processed-image.png">
+                  <Button variant="outline" className="w-full mt-4">Download Image</Button>
+                </a>
+              )}
+
+              <Button variant="secondary" onClick={resetImage} className="w-full">Reset</Button>
             </div>
           </CardFooter>
         </Card>
